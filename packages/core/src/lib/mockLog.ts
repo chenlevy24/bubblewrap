@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Log } from "..";
+import {Log} from "..";
 
 /**
  * An utility class to print nice Log messages.
@@ -29,13 +29,17 @@ export default class mockLog implements Log{
 
     private receivedData:Array<string> = [];
 
+    getreceivedData(): Array<string>{
+        return this.receivedData;
+    }
+
     /**
      * Prints a debug message to the Log. message is ignored if the Log is not set to verbose.
      * @param message the message the be printed.
      * @param args extra arguments for the console.
      */
     debug(message: string, ...args: string[]): void {
-        
+        this.receivedData.push(message);        
     }
   
     /**
@@ -70,7 +74,7 @@ export default class mockLog implements Log{
      * @param newTag the tag the be used on the new Log instance.
      */
     newLog(newTag: string): Log{
-        return new  mockLog();
+        return new mockLog();
     }
   }
   
