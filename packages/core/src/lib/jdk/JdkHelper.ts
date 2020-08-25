@@ -21,21 +21,6 @@ import * as path from 'path';
 import {executeFile} from '../util';
 
 /**
- * Returns the Home folder of the jdk.
- * @param {Config} config The bubblewrap general configuration
- * @param {NodeJS.Process} process Information from the OS process
- */
-export function getJavaHome(config: Config, process: NodeJS.Process): string {
-  const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
-  if (process.platform === 'darwin') {
-    return joinPath(config.jdkPath, '/Contents/Home/');
-  } else if (process.platform === 'linux' || process.platform === 'win32') {
-    return joinPath(config.jdkPath, '/');
-  }
-  throw new Error(`Unsupported Platform: ${process.platform}`);
-}
-
-/**
  * Helps getting information relevant to the JDK installed, including
  * the approprite environment needed to run Java commands on the JDK
  */
@@ -71,16 +56,23 @@ export class JdkHelper {
    */
   async runJava(args: string[]): Promise<{stdout: string; stderr: string}> {
     const java = this.process.platform === 'win32' ? '/bin/java.exe' : '/bin/java';
-    const runJavaCmd = this.joinPath(this.getJavaHome(), java);
+    const runJavaCmd = this.joinPath(JdkHelper.getJavaHome(this.config, this.process), java);
     return await executeFile(runJavaCmd, args, this.getEnv());
   }
 
   /**
    * Returns information from the JAVA_HOME, based on the config and platform.
-   * @returns {string} the value for the JAVA_HOME
+   * @param {Config} config The bubblewrap general configuration
+   * @param {NodeJS.Process} process Information from the OS process
    */
-  getJavaHome(): string {
-    return getJavaHome(this.config, this.process);
+  static getJavaHome(config: Config, process: NodeJS.Process): string {
+    const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
+    if (process.platform === 'darwin') {
+      return joinPath(config.jdkPath, '/Contents/Home/');
+    } else if (process.platform === 'linux' || process.platform === 'win32') {
+      return joinPath(config.jdkPath, '/');
+    }
+    throw new Error(`Unsupported Platform: ${process.platform}`);
   }
 
   /**
@@ -88,7 +80,7 @@ export class JdkHelper {
    * @returns {string} the value where the Java executables can be found
    */
   getJavaBin(): string {
-    return this.joinPath(this.getJavaHome(), 'bin/');
+    return this.joinPath(JdkHelper.getJavaHome(this.config, this.process), 'bin/');
   }
 
   /**
@@ -97,10 +89,12 @@ export class JdkHelper {
    */
   getEnv(): NodeJS.ProcessEnv {
     const env: NodeJS.ProcessEnv = Object.assign({}, this.process.env);
-    env['JAVA_HOME'] = this.getJavaHome();
+    env['JAVA_HOME'] = JdkHelper.getJavaHome(this.config, this.process);
     // Concatenates the Java binary path to the existing PATH environment variable.
     env[this.pathEnvironmentKey] =
         this.getJavaBin() + this.pathSeparator + env[this.pathEnvironmentKey];
     return env;
   }
 }
+
+export const getJavaHome = JdkHelper.getJavaHome;

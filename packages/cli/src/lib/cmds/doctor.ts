@@ -14,12 +14,11 @@
  *  limitations under the License.
  */
 
-import {ConsoleLog, Log, Config} from '@bubblewrap/core';
+import {ConsoleLog, Log, Config, getJavaHome} from '@bubblewrap/core';
 import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {enUS as messages} from '../strings';
-import {getJavaHome} from '../../../../core/src/lib/jdk/JdkHelper';
 
 async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
   const jdkPath = getJavaHome(config, process);

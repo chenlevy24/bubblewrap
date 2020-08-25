@@ -20,7 +20,7 @@ import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
 import {MockLog} from './spec/mock/MockLog';
 import {JarSigner} from './lib/jdk/JarSigner';
-import {JdkHelper} from './lib/jdk/JdkHelper';
+import {JdkHelper, getJavaHome} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode, SigningKeyInfo}
   from './lib/TwaManifest';
@@ -35,6 +35,7 @@ export {AndroidSdkTools,
   GradleWrapper,
   JarSigner,
   JdkHelper,
+  getJavaHome,
   KeyTool,
   Log,
   ConsoleLog,
