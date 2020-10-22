@@ -41,4 +41,13 @@ export interface WebManifestJson {
   background_color?: string;
   icons?: Array<WebManifestIcon>;
   shortcuts?: Array<WebManifestShortcutJson>;
+  share_target?: {
+    action: string;
+    method: string;
+    params: {
+      title: string;
+      text: string;
+      url: string;
+    };
+  };
 }

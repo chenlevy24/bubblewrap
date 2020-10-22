@@ -369,6 +369,15 @@ describe('TwaManifest', () => {
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
         'appVersion': '1',
+        'webShare': {
+          'action': '/share-target/',
+          'method': 'GET',
+          'params': {
+            'title': 'title',
+            'text': 'text',
+            'url': 'url',
+          },
+        },
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = new TwaManifest({
@@ -426,6 +435,15 @@ describe('TwaManifest', () => {
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
         'appVersion': '1',
+        'webShare': {
+          'action': '/share-target/',
+          'method': 'GET',
+          'params': {
+            'title': 'title',
+            'text': 'text',
+            'url': 'url',
+          },
+        },
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = new TwaManifest({

@@ -67,11 +67,21 @@ type Features = {
   appsFlyer?: AppsFlyerConfig;
   locationDelegation?: LocationDelegationConfig;
   firstRunFlag?: FirstRunFlagConfig;
-}
+};
 
-type alphaDependencies = {
+type AlphaDependencies = {
   enabled: boolean;
-}
+};
+
+type WebShare= {
+  action: string;
+  method: string;
+  params: {
+    title: string;
+    text: string;
+    url: string;
+  };
+};
 
 /**
  * A Manifest used to generate the TWA Project
@@ -132,9 +142,10 @@ export class TwaManifest {
   webManifestUrl?: URL;
   fallbackType: FallbackType;
   features: Features;
-  alphaDependencies: alphaDependencies;
+  alphaDependencies: AlphaDependencies;
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
+  webShare?: WebShare;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -175,6 +186,7 @@ export class TwaManifest {
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
+    this.webShare = data.webShare || undefined;
   }
 
   /**
@@ -295,6 +307,7 @@ export class TwaManifest {
       features: {
         locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
       },
+      webShare: webManifest['share_target'] || undefined,
     });
     return twaManifest;
   }
@@ -474,6 +487,7 @@ export interface TwaManifestJson {
   };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
+  webShare?: WebShare;
 }
 
 export interface SigningKeyInfo {
